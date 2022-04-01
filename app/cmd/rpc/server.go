@@ -156,13 +156,13 @@ func WriteJSONResponse(w http.ResponseWriter, jsn, path, ip string) {
 	var raw map[string]interface{}
 	if err := json.Unmarshal([]byte(jsn), &raw); err != nil {
 		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
-		fmt.Println(fmt.Errorf("error in RPC Handler WriteJSONResponse: %v", err))
+		fmt.Println(fmt.Errorf("error in RPC Handler; failed to unmarshal JSON response: %v", err))
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 	err := json.NewEncoder(w).Encode(raw)
 	if err != nil {
-		fmt.Println(fmt.Errorf("error in RPC Handler WriteJSONResponse: %v", err))
+		fmt.Println(fmt.Errorf("error in RPC Handler; failed to encode and write raw response: %v", err))
 		return
 	}
 }
@@ -172,13 +172,14 @@ func WriteJSONResponseWithCode(w http.ResponseWriter, jsn, path, ip string, code
 	var raw map[string]interface{}
 	if err := json.Unmarshal([]byte(jsn), &raw); err != nil {
 		WriteErrorResponse(w, http.StatusInternalServerError, err.Error())
-		fmt.Println(fmt.Errorf("error in RPC Handler WriteJSONResponse: %v", err))
+		fmt.Println(fmt.Errorf("error in RPC Handler; failed to unmarshal JSON response with code: %v", err))
 		return
 	}
 	w.WriteHeader(code)
 	err := json.NewEncoder(w).Encode(raw)
 	if err != nil {
-		fmt.Println(fmt.Errorf("error in RPC Handler WriteJSONResponse: %v", err))
+		fmt.Println(fmt.Errorf("error in RPC Handler; failed to encode and write raw response with code: %v",
+			err))
 		return
 	}
 }
