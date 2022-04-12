@@ -124,6 +124,8 @@ func (r Relay) Execute(hostedBlockchains *HostedBlockchains) (string, sdk.Error)
 	if len(r.Payload.Path) > 0 {
 		url = url + "/" + strings.Trim(r.Payload.Path, `/`)
 	}
+	// add chain ID to headers to aid reverse proxy logging
+	r.Payload.Headers["X-Chain-ID"] = chain.ID
 	// do basic http request on the relay
 	res, er := executeHTTPRequest(r.Payload.Data, url, GlobalPocketConfig.UserAgent, chain.BasicAuth, r.Payload.Method, r.Payload.Headers)
 	if er != nil {
@@ -136,7 +138,7 @@ func (r Relay) Execute(hostedBlockchains *HostedBlockchains) (string, sdk.Error)
 
 // "Bytes" - Returns the bytes representation of the Relay
 func (r Relay) Bytes() []byte {
-	//Anonymous Struct used because of #742 empty proof object being marshalled
+	// Anonymous Struct used because of #742 empty proof object being marshalled
 	relay := struct {
 		Payload Payload   `json:"payload"` // the data payload of the request
 		Meta    RelayMeta `json:"meta"`    // metadata for the relay request
